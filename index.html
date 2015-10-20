@@ -68,7 +68,7 @@
       
       
   
-    <h1 class="title"><a href="/2015/10/20/openwrt-wpj344-disable-radio/">Remove wifi interface from kenel for OpenWRT</a></h1>
+    <h1 class="title"><a href="/2015/10/20/openwrt-wpj344-disable-radio/">Remove internal WIFI interface from kenel for OpenWRT</a></h1>
   
 
     </header>
@@ -112,10 +112,11 @@
     </header>
     <div class="entry">
       
-        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it doesn’t work well on ar71xx platform. We have to do it manually.</p>
+        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it does not work well on ar71xx platform. We have to do it manually.</p>
 <ol>
 <li>Edit target/linux/ar71xx/image/Makefile.</li>
-<li>Replace “$(if $(1),board=$(1) )$(if $(2),console=$(2)$(COMMA)$(3))” with “$(if $(1),board=$(1) )$(if $(2),console=null)”.</li>
+<li>Replace <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">if</span> $(<span class="number">1</span>),board=$(<span class="number">1</span>) )$(<span class="keyword">if</span> $(<span class="number">2</span>),console=$(<span class="number">2</span>)$(COMMA)$(<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+with <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="keyword">if</span> $(<span class="number">1</span>),board=$(<span class="number">1</span>) )$(<span class="keyword">if</span> $(<span class="number">2</span>),console=null)</span><br></pre></td></tr></table></figure></li>
 <li>Recompile.</li>
 </ol>
 <p>References:<br><a href="https://dev.openwrt.org/ticket/11243" target="_blank" rel="external">https://dev.openwrt.org/ticket/11243</a></p>
@@ -190,6 +191,8 @@
   <h3 class="title">分类</h3>
   <ul class="entry">
   
+    <li><a href="/categories/技术笔记/">技术笔记</a><small>2</small></li>
+  
     <li><a href="/categories/随笔/">随笔</a><small>1</small></li>
   
   </ul>
@@ -201,7 +204,7 @@
   <h3 class="title">标签</h3>
   <ul class="entry">
   
-    <li><a href="/tags/openwrt/">openwrt</a><small>1</small></li>
+    <li><a href="/tags/openwrt/">openwrt</a><small>2</small></li>
   
     <li><a href="/tags/矫情/">矫情</a><small>1</small></li>
   
