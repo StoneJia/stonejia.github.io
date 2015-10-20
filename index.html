@@ -64,6 +64,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-20T11:29:15.000Z"><a href="/2015/10/20/openwrt-wpj344-disable-radio/">2015-10-20</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/20/openwrt-wpj344-disable-radio/">Remove wifi interface from kenel for OpenWRT</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>To remove the internal radio of wpj344 from the kernel.</p>
+<ol>
+<li>Edit target/linux/ar71xx/files/arch/mips/ath79/mach-wpj344.c</li>
+<li>Remove the code: <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ath79_register_awl_wmac(<span class="string">"Atheros AR934x"</span>, ATH79_IP2_IRQ(<span class="number">1</span>),</span><br><span class="line">							KSEG1ADDR(AR934X_WMAC_BASE), AR934X_WMAC_SIZE, art_buf);</span><br></pre></td></tr></table></figure></li>
+<li>Recompile.</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-20T09:11:49.000Z"><a href="/2015/10/20/openwrt-ar71xx-console-disable/">2015-10-20</a></time>
       
       
@@ -74,7 +112,7 @@
     </header>
     <div class="entry">
       
-        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it doesn’t work well on ar71xx platform. We have to do manually.</p>
+        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it doesn’t work well on ar71xx platform. We have to do it manually.</p>
 <ol>
 <li>Edit target/linux/ar71xx/image/Makefile.</li>
 <li>Replace “$(if $(1),board=$(1) )$(if $(2),console=$(2)$(COMMA)$(3))” with “$(if $(1),board=$(1) )$(if $(2),console=null)”.</li>

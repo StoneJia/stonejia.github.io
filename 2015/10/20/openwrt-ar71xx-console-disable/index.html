@@ -75,7 +75,7 @@
     </header>
     <div class="entry">
       
-        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it doesn’t work well on ar71xx platform. We have to do manually.</p>
+        <p>Normally, to diable the console for OpenWRT, just follow:<br><a href="http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial" target="_blank" rel="external">http://wiki.openwrt.org/doc/recipes/terminate.console.on.serial</a>.<br>However, it doesn’t work well on ar71xx platform. We have to do it manually.</p>
 <ol>
 <li>Edit target/linux/ar71xx/image/Makefile.</li>
 <li>Replace “$(if $(1),board=$(1) )$(if $(2),console=$(2)$(COMMA)$(3))” with “$(if $(1),board=$(1) )$(if $(2),console=null)”.</li>
