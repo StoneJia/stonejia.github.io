@@ -158,7 +158,14 @@
     <div class="entry">
       
         <p>To remove the internal radio of wpj344 from the kernel.</p>
-<ol>
+<h2 id="Version_Gen3:">Version Gen3:</h2><ol>
+<li>Edit target/linux/ar71xx/files/arch/mips/ath79/mach-wpj344.c</li>
+<li>Change Code:<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ath79_register_awl_wmac(<span class="string">"Atheros AR934x"</span>, ATH79_IP2_IRQ(<span class="number">1</span>),</span><br><span class="line">                                                        KSEG1ADDR(AR934X_WMAC_BASE), AR934X_WMAC_SIZE, art_buf);</span><br></pre></td></tr></table></figure>
+to<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ath79_register_awl_wmac(NULL, ATH79_IP2_IRQ(<span class="number">1</span>),</span><br><span class="line">                                                        KSEG1ADDR(AR934X_WMAC_BASE), AR934X_WMAC_SIZE, art_buf);</span><br></pre></td></tr></table></figure></li>
+<li>Remove the code:<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ath79_register_wmac(art+WPJ344_WMAC_CALDATA_OFFSET,NULL);</span><br></pre></td></tr></table></figure></li>
+<li>Recompile.</li>
+</ol>
+<h2 id="Old_Version,_Gen1&amp;2:">Old Version, Gen1&amp;2:</h2><ol>
 <li>Edit target/linux/ar71xx/files/arch/mips/ath79/mach-wpj344.c</li>
 <li>Remove the code: <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ath79_register_awl_wmac(<span class="string">"Atheros AR934x"</span>, ATH79_IP2_IRQ(<span class="number">1</span>),</span><br><span class="line">							KSEG1ADDR(AR934X_WMAC_BASE), AR934X_WMAC_SIZE, art_buf);</span><br></pre></td></tr></table></figure></li>
 <li>Recompile.</li>
