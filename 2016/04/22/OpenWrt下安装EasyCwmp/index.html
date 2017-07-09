@@ -1,0 +1,314 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>OpenWrt下安装EasyCwmp (以及json-c版本问题) | Zana.today | 在哪道今天</title>
+  <meta name="author" content="路人假">
+  
+  <meta name="description" content="##安装EasyCwmp到OpenWrt
+
+安装尚未安装的依赖安装EasyCwmp所需要的依赖
+
+libuci
+libcurl
+json-c：可能会遇到版本问题，后附解决放案.
+libubox
+libubus
+libmicroxml：下载地址 http://easycwmp.org/download/libmicroxml.tar.gz">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="OpenWrt下安装EasyCwmp (以及json-c版本问题)"/>
+  <meta property="og:site_name" content="Zana.today | 在哪道今天"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Zana.today | 在哪道今天" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-61384959-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Zana.today | 在哪道今天</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/archives">Norge</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-04-22T16:19:01.000Z"><a href="/2016/04/22/OpenWrt下安装EasyCwmp/">2016-04-22</a></time>
+      
+      
+  
+    <h1 class="title">OpenWrt下安装EasyCwmp (以及json-c版本问题)</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>##安装EasyCwmp到OpenWrt</p>
+<ol>
+<li><p><strong>安装尚未安装的依赖</strong><br>安装EasyCwmp所需要的依赖</p>
+<ul>
+<li>libuci</li>
+<li>libcurl</li>
+<li>json-c：<a href="#json-c版本问题">可能会遇到版本问题，后附解决放案</a>.</li>
+<li>libubox</li>
+<li>libubus</li>
+<li>libmicroxml：下载地址 <a href="http://easycwmp.org/download/libmicroxml.tar.gz" target="_blank" rel="external">http://easycwmp.org/download/libmicroxml.tar.gz</a><a id="more"></a>
+</li>
+</ul>
+<p>安装</p>
+<pre><code>cd /openwrt目录/package/
+./scripts/feeds install libcurl
+./scripts/feeds install libmicroxml
+</code></pre><p>如果无法直接安装，下载并解压依赖安装信息包到OpenWrt。以libmicroxml为例：</p>
+<pre><code>cd /openwrt目录/package/
+wget http://easycwmp.org/download/libmicroxml.tar.gz
+tar -xzvf libmicroxml.tar.gz
+cd ..
+</code></pre></li>
+<li><p><strong>下载并解压easycwmp安装信息包到OpenWrt</strong></p>
+<pre><code>cd /openwrt目录/package/
+wget http://easycwmp.org/download/easycwmp-openwrt.tar.gz
+tar -xzvf easycwmp-openwrt.tar.gz
+cd ..
+</code></pre></li>
+<li><p><strong>添加到OpenWrt的配置并编译</strong></p>
+<ul>
+<li><p>编译为带有EasyCwmp的OpenWrt镜像</p>
+<pre><code>make menuconfig
+[在Utilities里勾选easycwmp为&lt;*&gt;]
+make
+</code></pre></li>
+<li><p>编译为单独的EasyCwmp模块</p>
+<pre><code>make menuconfig
+[在Utilities里勾选easycwmp为&lt;M&gt;]
+make package/easycwmp/compile
+</code></pre></li>
+</ul>
+</li>
+</ol>
+<p>##json-c版本问题<br>编译过程会遇到如下关于json-c的错误。</p>
+<pre><code>......
+In file included from ../src/cwmp.c:17:0:
+../src/json.h:16:26: fatal error: json-c/json.h: No such file or directory
+compilation terminated.
+make[5]: *** [../src/easycwmpd-cwmp.o] Error 1
+......
+</code></pre><p>因为尝试安装在OpenWrt的旧版本中，使用的json-c为0.9版本，鉴于其他依赖原因也不能更新。<br>而easycwmp已经更新为与新版json-c兼容。造成这个错误的原因仅仅是json-c的各版本名称不同。<br>json-c 0.9 的安装目录名为json，编译的库文件名称为libjson。<br>json-c 0.11/0.12 的安装目录名为json-c，编译的库文件名称为libjson-c。</p>
+<p>为了和旧版json-c兼容。在EasyCwmp的原代码中将名称替换为旧版本使用的。</p>
+<ol>
+<li><p>在easycwmp原代码中，将external.c, json.c, json.h 中的宏</p>
+<pre><code>#ifdef JSONC
+ #include &lt;json-c/json.h&gt;
+#else
+ #include &lt;json/json.h&gt;
+#endif
+</code></pre><p> 更改为</p>
+<pre><code>#include &lt;json/json.h&gt;
+</code></pre></li>
+<li><p>在easycwmp原代码中，将configue.ac中的</p>
+<pre><code>AC_ARG_ENABLE(jsonc, [AS_HELP_STRING([--enable-jsonc], [build with jsonc])], [
+ AC_DEFINE(JSONC)
+ LIBJSON_LIBS=&apos;-ljson-c&apos;
+ AC_SUBST([LIBJSON_LIBS])
+], [
+ LIBJSON_LIBS=&apos;-ljson&apos;
+ AC_SUBST([LIBJSON_LIBS])
+])
+</code></pre><p>改为</p>
+<pre><code>AC_ARG_ENABLE(jsonc, [AS_HELP_STRING([--enable-jsonc], [build with jsonc])], [
+ LIBJSON_LIBS=&apos;-ljson&apos;
+ AC_SUBST([LIBJSON_LIBS])
+])
+</code></pre></li>
+<li><p>另外，需要更改 /openwrt目录/package/easycwmp/Makefile, 将</p>
+<pre><code>define Package/easycwmp
+    SECTION:=utils
+    CATEGORY:=Utilities
+    TITLE:=CWMP client (using libcurl)
+    DEPENDS:=+libubus +libuci +libubox +libmicroxml +libjson-c +libcurl
+endef
+</code></pre><p>改为</p>
+<pre><code>define Package/easycwmp
+    SECTION:=utils
+    CATEGORY:=Utilities
+    TITLE:=CWMP client (using libcurl)
+    DEPENDS:=+libubus +libuci +libubox +libmicroxml +libjson +libcurl
+endef
+</code></pre></li>
+</ol>
+<p>重新编译即可。</p>
+<hr>
+<p>参考及相关<br><a href="http://www.easycwmp.org/index.php/manual" target="_blank" rel="external">http://www.easycwmp.org/index.php/manual</a><br><a href="http://www.shenjuanli.com/2015/05/16/安装-libubox-时遇到的-json-c-版本问题" target="_blank" rel="external">http://www.shenjuanli.com/2015/05/16/安装-libubox-时遇到的-json-c-版本问题</a><br><a href="http://support.easycwmp.org/view.php?id=9" target="_blank" rel="external">http://support.easycwmp.org/view.php?id=9</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/工作笔记/">工作笔记</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/TR-069/">TR-069</a>, <a href="/tags/openwrt/">openwrt</a>, <a href="/tags/CWMP/">CWMP</a>, <a href="/tags/easycwmp/">easycwmp</a>, <a href="/tags/json-c/">json-c</a>
+  </div>
+
+        
+  <div class="addthis addthis_toolbox addthis_default_style">
+    
+      <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+    
+    
+      <a class="addthis_button_tweet"></a>
+    
+    
+      <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+    
+    
+      <a class="addthis_button_pinterest_pinit" pi:pinit:layout="horizontal"></a>
+    
+    <a class="addthis_counter addthis_pill_style"></a>
+  </div>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js"></script>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+      <div id="fb-root"></div>
+<script>
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=123456789012345";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<div class="fb-comments" data-href="http://zana.today/2016/04/22/OpenWrt下安装EasyCwmp/index.html" data-num-posts="5" data-width="840" data-colorscheme="light"></div>
+      
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:zana.today">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">分类</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/工作笔记/">工作笔记</a><small>4</small></li>
+  
+    <li><a href="/categories/随笔/">随笔</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">标签</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/CWMP/">CWMP</a><small>1</small></li>
+  
+    <li><a href="/tags/GenieACS/">GenieACS</a><small>1</small></li>
+  
+    <li><a href="/tags/TR-069/">TR-069</a><small>2</small></li>
+  
+    <li><a href="/tags/easycwmp/">easycwmp</a><small>1</small></li>
+  
+    <li><a href="/tags/json-c/">json-c</a><small>1</small></li>
+  
+    <li><a href="/tags/openwrt/">openwrt</a><small>3</small></li>
+  
+    <li><a href="/tags/矫情/">矫情</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2017 路人假
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
